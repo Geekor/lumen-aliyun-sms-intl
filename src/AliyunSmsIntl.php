@@ -2,6 +2,7 @@
 
 namespace Geekor\LaravelAliyunSmsIntl;
 
+use Geekor\AliyunSmsIntlCore\Config;
 use Geekor\AliyunSmsIntlCore\Profile\DefaultProfile;
 use Geekor\AliyunSmsIntlCore\DefaultAcsClient;
 use Geekor\AliyunSmsIntlCore\Regions\Endpoint;
@@ -9,8 +10,6 @@ use Geekor\AliyunSmsIntlCore\Regions\EndpointConfig;
 use Geekor\AliyunSmsIntlCore\Regions\EndpointProvider;
 use Geekor\AliyunSmsIntlCore\Exception\ClientException;
 use Geekor\AliyunSmsIntlCore\Exception\ServerException;
-
-//use Geekor\AliyunSmsIntl\Sms\Request\V20180501\SingleSendSmsRequest;
 use Geekor\AliyunSmsIntl\Sms\Request\V20180501\SendSmsRequest;
 
 class AliyunSmsIntl {
@@ -19,7 +18,59 @@ class AliyunSmsIntl {
         return "进来了";
     }
 
-    public function send($mobile, $tplId, $params)
+    /**
+     * 发送短信
+     * 
+     * @param mobile 手机号码，记得加上区域代号。
+     *        例如：  "886123456789"
+     * @param tplId  模板 ID
+     *        例如：  "SMS_00000001"
+     * @param params 模板变量，数字一定要转换为字符串。
+     *        例如：  array("code"=>"1234")
+     */
+    public function sendSms($mobile, $tplId, $params) {
+        // product name， please remain unchanged
+        $product = "Dysmsapi";
+        // product domain, please remain unchanged
+        $domain = "dysmsapi.ap-southeast-1.aliyuncs.com";
+    
+        // AccessKey and AccessKeySecret , you can login sms console and find it in API Management
+        $accessKeyId = ENV('ALIYUN_SMS_ACCESS_KEY');
+        $accessKeySecret = ENV('ALIYUN_SMS_ACCESS_SECRET');
+    
+        $region = "ap-southeast-1";
+        $endPointName = "ap-southeast-1";
+    
+        $profile = DefaultProfile::getProfile($region, $accessKeyId, $accessKeySecret);
+    
+        DefaultProfile::addEndpoint($endPointName, $region, $product, $domain);
+    
+        $acsClient = new DefaultAcsClient($profile);
+    
+        // initiate the SendSmsRequest, read help documents for more parameters instructions
+        $request = new SendSmsRequest();
+    
+        // Optional, enable https
+        //$request->setProtocol("https");
+    
+        // send to
+        $request->setPhoneNumbers($mobile);
+    
+        // ContentCode , you can login sms console and find it in Content Management
+        $request->setContentCode($tplId);
+    
+        // set the value for parameters in sms Content with JSON format. For example, the content is "Your Verification Code : ${code}, will be expired 5 minutes later"
+        $request->setContentParam(json_encode($params, JSON_UNESCAPED_UNICODE));
+    
+        // Optional，custom field, this value will be returned in the sms delivery report.
+        $request->setExternalId("1234567");
+    
+        $acsResponse = $acsClient->getAcsResponse($request);
+    
+        return $acsResponse;
+    }
+
+    function send($mobile, $tplId, $params)
     {
         defined('ENABLE_HTTP_PROXY') or define('ENABLE_HTTP_PROXY', env('ALIYUN_SMS_ENABLE_HTTP_PROXY', false));
         defined('HTTP_PROXY_IP') or define('HTTP_PROXY_IP',     env('ALIYUN_SMS_HTTP_PROXY_IP', '127.0.0.1'));
