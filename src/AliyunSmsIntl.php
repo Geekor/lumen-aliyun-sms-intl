@@ -13,7 +13,7 @@ use Geekor\AliyunSmsIntlCore\Exception\ServerException;
 //use Geekor\AliyunSmsIntl\Sms\Request\V20180501\SingleSendSmsRequest;
 use Geekor\AliyunSmsIntl\Sms\Request\V20180501\SendSmsRequest;
 
-class AliyunSms {
+class AliyunSmsIntl {
     public function sendDemo() 
     {
         return "进来了";
