@@ -1,0 +1,23 @@
+{
+    "name": "geekor/lumen-aliyun-sms-intl",
+    "description": "阿里云短信服务（国际版v20180501） for lumen",
+    "keywords": ["aliyun", "aliyun-sms-intl", "lumen", "sms", "sdk"],
+    "require": {
+        "php": ">5.3",
+        "geekor/aliyun-sms-intl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Geekor\\LaravelAliyunSmsIntl\\": "src/"
+        }
+    },
+
+    "license": "Apache 2.0",
+    "minimum-stability" : "dev",
+    "authors": [
+        {
+            "name": "Geekor",
+            "email": "geekor@163.com"
+        }
+    ]
+}
