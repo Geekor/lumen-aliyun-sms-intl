@@ -35,7 +35,7 @@ class AliyunSmsIntl {
      *        例如：  array("code"=>"1234")
      */
     public function sendSms($mobile, $tplId, $params) {
-        return sendSmsExt($mobile, $tplId, $params, false, false);
+        return $this->sendSmsExt($mobile, $tplId, $params, false, false);
     }
 
     /**
